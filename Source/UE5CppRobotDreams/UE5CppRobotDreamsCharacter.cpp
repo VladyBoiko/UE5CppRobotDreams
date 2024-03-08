@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "MyPlayerState.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -66,6 +67,26 @@ void AUE5CppRobotDreamsCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+}
+
+void AUE5CppRobotDreamsCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (const AMyPlayerState* MyPlayerState = NewController->GetPlayerState<AMyPlayerState>())
+	{
+		MyPlayerState->GetAbilitySystemComponent()->SetAvatarActor(this);
+	}
+}
+
+void AUE5CppRobotDreamsCharacter::UnPossessed()
+{
+	Super::UnPossessed();
+
+	if (const AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>())
+	{
+		MyPlayerState->GetAbilitySystemComponent()->SetAvatarActor(nullptr);
 	}
 }
 
